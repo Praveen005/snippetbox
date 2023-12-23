@@ -1,4 +1,5 @@
-### Creating a module
+## Creating a module
+
 
 you can think of a module path as basically being a canonical name or identifier for your project.
 
@@ -10,13 +11,18 @@ In my case, a clear, succinct and unlikely-to-be-used-by-anything-else module pa
 project would be snippetbox.praveen, and I’ll use this throughout the rest of the book.
 
 
-```go mod init snippetbox.praveen```
+```
+go mod init snippetbox.praveen
+```
 
 or can simply have:
 
-```go mo init snippetbox```
+```
+go mod init snippetbox
+```
 
-#### Additional Info:
+**Additional Info:** 
+
 
 If you’re creating a project which can be downloaded and used by other people and
 programs, then it’s good practice for your module path to equal the location that the code
@@ -25,3 +31,6 @@ can be downloaded from.
 For instance, if your package is hosted at https://github.com/Praveen005/snippetbox then the module path
 for the project should be github.com/Praveen005/snippetbox.
 
+```
+go mod init github.com/Praveen005/snippetbox
+```
