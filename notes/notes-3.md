@@ -1,5 +1,5 @@
 ## Routing Requests
-[Routing Requests](./assets/router1.jpg)
+![Routing Requests](./assets/router1.jpg)
 
 ## Fixed path and subtree patterns
 
