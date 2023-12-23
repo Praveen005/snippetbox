@@ -68,7 +68,7 @@ Although this approach can make our code slightly shorter, But is not recommende
 production applications.
 
 Because ```DefaultServeMux``` is a global variable, any package can access it and register a route
-— including any third-party packages that our application imports. If one of those third party packages is compromised, they could use DefaultServeMux to expose a malicious
+— including any third-party packages that our application imports. If one of those third party packages is compromised, they could use ```DefaultServeMux``` to expose a malicious
 handler to the web.
 
 
@@ -102,4 +102,92 @@ mux.HandleFunc("example.com/hello", helloHandler)
 
 // Non-host-specific pattern
 mux.HandleFunc("/hello", defaultHelloHandler)
+```
+
+## Customizing HTTP headers
+
+Let’s now update our application so that the ```/snippet/create``` route only responds to HTTP
+requests which use the POST method:
+
+![Customizing HTTP headers](./assets/router2.jpg)
+
+Our ```snippetCreate``` handler function will send a 405 (method
+not allowed) HTTP status code unless the request method is ```POST```.
+
+```
+func snippetCreate(w http.ResponseWriter, r * http.Request){
+	
+	if r.Method != "POST"{
+		w.WriteHeader(405)
+		w.Write([]byte("Method Not Allowed"))
+		return
+	}
+	 
+	w.Write([]byte("Create a new snippet.."))
+}
+```
+- It’s only possible to call w.WriteHeader() once per response, and after the status code has
+been written it can’t be changed. If you try to call w.WriteHeader() a second time Go will
+log a warning message.
+
+- If you don’t call w.WriteHeader() explicitly, then the first call to w.Write() will
+automatically send a 200 OK status code to the user. So, if you want to send a non-200
+status code, you must call w.WriteHeader() before any call to w.Write().
+
+Start the server and try:
+
+```
+Invoke-WebRequest -Uri http://localhost:4000/snippet/create -Method Post
+```
+or
+```
+curl -i -X POST http://localhost:4000/snippet/create
+```
+
+You'd get:
+
+```
+StatusCode        : 200                                                                                                              
+StatusDescription : OK                                                                                                               
+Content           : Create a new snippet..
+RawContent        : HTTP/1.1 200 OK
+                    Content-Length: 22
+                    Content-Type: text/plain; charset=utf-8
+                    Date: Sat, 23 Dec 2023 13:12:47 GMT
+
+                    Create a new snippet..
+Forms             : {}
+Headers           : {[Content-Length, 22], [Content-Type, text/plain; charset=utf-8], [Date, Sat, 23 Dec 2023 13:12:47 GMT]}
+Images            : {}
+InputFields       : {}
+Links             : {}
+ParsedHtml        : mshtml.HTMLDocumentClass
+RawContentLength  : 22
+
+```
+
+> Important: Changing the response header map after a call to ```w.WriteHeader()``` or
+```w.Write()``` will have no effect on the headers that the user receives. You need to make
+sure that your response header map contains all the headers you want before you call
+these methods.
+
+
+we can make is to use [constants](https://pkg.go.dev/net/http#pkg-constants) from the net/http package for HTTP
+methods and status codes, instead of writing the strings and integers ourselves.
+
+we can use the constant ```http.MethodPost``` instead of the string ```"POST"```, and the
+constant http.StatusMethodNotAllowed instead of the integer ```405```.
+
+```
+func snippetCreate(w http.ResponseWriter, r * http.Request){
+
+	if r.Method != "POST"{
+		// w.Header().Set("Allow", "POST")
+		w.Header().Set("Allow", http.MethodPost)
+		
+		// http.Error(w, "Method No Allowed", 405)
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+}
 ```
