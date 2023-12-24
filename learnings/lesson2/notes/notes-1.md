@@ -88,10 +88,10 @@ Example:
 w.Header()["X-XSS-Protection"] = []string{"1; mode=block"}
 ```
 
-> Note: If a HTTP/2 connection is being used, Go will always automatically convert the
-header names and values to lowercase for you as per the HTTP/2 specifications.
+> Note: If a ```HTTP/2``` connection is being used, Go will always automatically convert the
+header names and values to lowercase for you as per the ```HTTP/2``` specifications.
 >
-> Example: if you set a header using resp.Header.Set("Content-Type", "application/json") and the request is sent over an HTTP/2 connection, the actual headers sent in the HTTP/2 frames will have the header field name "content-type" in lowercase.
+> Example: if you set a header using ```resp.Header.Set("Content-Type", "application/json")``` and the request is sent over an ```HTTP/2``` connection, the actual headers sent in the ```HTTP/2``` frames will have the header field name ```"content-type"``` in lowercase.
 
 ### Suppressing system-generated headers
 
