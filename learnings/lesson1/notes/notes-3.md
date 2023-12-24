@@ -1,4 +1,6 @@
 ## Routing Requests
+<!-- ![Routing Requests](learnings/lesson1/assets/router1.jpg) -->
+
 ![Routing Requests](./assets/router1.jpg)
 
 ## Fixed path and subtree patterns
@@ -130,9 +132,9 @@ func snippetCreate(w http.ResponseWriter, r * http.Request){
 been written it can’t be changed. If you try to call w.WriteHeader() a second time Go will
 log a warning message.
 
-- If you don’t call w.WriteHeader() explicitly, then the first call to w.Write() will
+- **If you don’t call w.WriteHeader() explicitly, then the first call to w.Write() will
 automatically send a 200 OK status code to the user. So, if you want to send a non-200
-status code, you must call w.WriteHeader() before any call to w.Write().
+status code, you must call w.WriteHeader() before any call to w.Write().**
 
 Start the server and try:
 
