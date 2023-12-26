@@ -77,7 +77,7 @@ func snippetCreate(w http.ResponseWriter, r * http.Request){
 func downloadHandler(w http.ResponseWriter, r* http.Request){
 	path := path.Clean("./notes-1.md")
 
-	// w.Header().Set("Content-Disposition", "inline; filename=notes1.md") //displays the file in browser
+	w.Header().Set("Content-Disposition", "inline; filename=notes1.md") //displays the file in browser
 	w.Header().Set("Content-Disposition", "attachment; filename=notes1.md") //downloads the file
 	http.ServeFile(w, r, path)
 }
