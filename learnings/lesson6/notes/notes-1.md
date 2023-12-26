@@ -153,3 +153,12 @@ There are a couple of different ways to do this, but a simple and clear approach
 ```
 infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 ```
+Run server in one terminal and try running it again in another, you will get the following:
+
+![Info & Error](./assets/logs.png)
+
+
+> Tip: If you want to include the full file path in your log output, instead of just the file
+name, you can use the `log.Llongfile` flag instead of `log.Lshortfile` when creating
+your custom logger. You can also force your logger to use UTC datetimes (instead of
+local ones) by adding the `log.LUTC` flag.
