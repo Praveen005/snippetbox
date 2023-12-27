@@ -1,0 +1,4 @@
+INFO	2023/12/27 10:00:17 Starting server on :4000
+ERROR	2023/12/27 10:00:17 main.go:70: listen tcp :4000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+INFO	2023/12/27 10:03:16 Starting server on :4000
+ERROR	2023/12/27 10:03:16 main.go:70: listen tcp :4000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.

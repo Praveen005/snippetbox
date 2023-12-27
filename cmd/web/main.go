@@ -8,6 +8,8 @@ import (
 )
 
 func main(){
+
+
 	// Define a new command-line flag with the name 'addr', a default value of ":4000"
 	// and some short help text explaining what the flag controls. The value of the
 	// flag will be stored in the addr variable at runtime.
@@ -46,7 +48,17 @@ func main(){
 
 	infoLog.Printf("Starting server on %s", *addr)
 
-	err := http.ListenAndServe(*addr, mux)
+	// Initialize a new http.Server struct. We set the Addr and Handler fields so
+	// that the server uses the same network address and routes as before, and set
+	// the ErrorLog field so that the server now uses the custom errorLog logger in
+	// the event of any problems.
+	srv := &http.Server{
+		Addr: *addr,
+		ErrorLog: errorLog,
+		Handler: mux,
+	}
 
+	// err := http.ListenAndServe(*addr, mux)
+	err := srv.ListenAndServe()
 	errorLog.Fatal(err)
 }
