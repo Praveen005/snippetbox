@@ -18,7 +18,7 @@ func home(w http.ResponseWriter, r * http.Request){
 	// to note that the file containing our base template must be the *first*
 	// file in the slice.
 	files := []string{
-		"./ui/html/pages/base.tmpl",
+		"./ui/html/base.tmpl",
 		"./ui/html/pages/home.tmpl",
 		"./ui/html/partials/nav.tmpl",
 
@@ -49,8 +49,8 @@ func home(w http.ResponseWriter, r * http.Request){
 	if err != nil {
 		log.Print(err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
-
 }
 
 func snippetView(w http.ResponseWriter, r * http.Request){
