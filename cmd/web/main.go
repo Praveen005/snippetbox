@@ -7,6 +7,14 @@ import (
 	"net/http"
 )
 
+//define an application struct to hold the application wide dependencies for the web application, for now we'll include fields for the custom logger
+// But can add more as the build progresses.
+
+type application struct{
+	errorLog *log.Logger
+	infoLog *log.Logger
+}
+
 func main(){
 
 
