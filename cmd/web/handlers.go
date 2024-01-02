@@ -30,6 +30,7 @@ func (app *application)home(w http.ResponseWriter, r* http.Request){
 		return
 	}
 
+	//It executes a parsed HTML template with provided data(nil here), generating the final output by merging the template's structure with dynamic content.
 	err = ts.ExecuteTemplate(w, "base", nil)
 	if err != nil{
 		// app.errorLog.Print(err.Error())
@@ -49,6 +50,7 @@ func (app *application) snippetView(w http.ResponseWriter, r * http.Request){
 		return
 	}
 
+	//writing in the response body, will be displayed on the web page
 	fmt.Fprintf(w, "Display the specific snippet with ID %d ...", id) 
 }
 
