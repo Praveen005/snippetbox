@@ -91,4 +91,3 @@ func(app * application) snippetCreate(w http.ResponseWriter, r* http.Request){
 	//Redirect the user to relevent page for the snippet
 	http.Redirect(w, r, fmt.Sprintf("/snippet/view?id=%d", id), http.StatusSeeOther)
 }
-

@@ -14,6 +14,9 @@
                 <tr>
                     <td><a href="/snippet/view?id={{.ID}}">{{.Title}}</a></td>
                     <td>{{humanDate .Created}}</td>
+                    <!-- Aliter: Pipelining: using the output of one command to another -->
+                    <!-- Here, the .Created will give UTC time, which will be used by humanDate function -->
+                    <!-- <td>{{.Created | humanDate}}</td> -->
                     <td>{{.ID}}</td>
                 </tr>
             {{end}}
