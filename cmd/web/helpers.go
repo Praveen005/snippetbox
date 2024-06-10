@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"runtime/debug"
+	"time"
 )
 
 //The serverError helper writes an error and stack trace to the error log,
@@ -50,6 +51,8 @@ func (app *application) render(w http.ResponseWriter, status int, page string, d
 	// Write the template to the buffer, instead of straight to the
 	// http.ResponseWriter. If there's an error, call our serverError() helper
 	// and then return.
+	// All the templates are ultimatel being invoked from the based template only, 
+	// hence the name below is "base"
 	err := ts.ExecuteTemplate(buf, "base", data)
 	if err != nil{
 		app.serverError(w, err)
@@ -65,4 +68,13 @@ func (app *application) render(w http.ResponseWriter, status int, page string, d
 	// is another time where we pass our http.ResponseWriter to a function that
 	// takes an io.Writer.
 	buf.WriteTo(w)
+}
+
+// Create an newTemplateData() helper, which returns a pointer to a templateData
+// struct initialized with the current year. Note that we're not using the 
+// *http.Request parameter here at the moment, but we will do later
+func(app *application) newTemplateData(r *http.Request) *templateData{
+	return &templateData{
+		CurrentYear: time.Now().Year(),
+	}
 }
