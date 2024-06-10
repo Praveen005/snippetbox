@@ -1,12 +1,10 @@
 package main
 
-
-import(
+import (
 	"html/template"
 	"path/filepath"
 
 	"github.com/Praveen005/snippetbox/internal/models"
-
 )
 
 // Define a templateData type to act as the holding structure for
@@ -37,23 +35,30 @@ func newTemplateCache()(map[string]*template.Template, error){
 		// and assign it to the name variable
 		name := filepath.Base(page)
 
-
-		/// Create a slice containing the filepaths for our base template, any
-		// partials and the page.
-		files := []string{
-			"./ui/html/base.tmpl",
-			"./ui/html/partials/nav.tmpl",
-			page,
-		}
-
-		// parse the files into template set
-		ts, err := template.ParseFiles(files...)
+		// Parse the base template file into a template set.
+		ts, err := template.ParseFiles("./ui/html/base.tmpl")
 		if err != nil{
 			return nil, err
 		}
 
-		// Add the template set to the map, using the name of the page
-		//  (like 'home.tmpl') as the key.
+		// Call ParseGlob() *on this template set* to add any partials.
+		ts, err = ts.ParseGlob("./ui/html/partials/*.tmpl")
+		if err != nil{
+			return nil, err
+		}
+
+		// Call ParseFiles() *on this template set* to add the page template.
+		// Every page will have a base and partials,
+		// So for every page(we are inside loop), we parse base, partials and the respective page
+		// we have one home page, which displays the latest snippets created, other page is views page
+		// which displays id specific snippet.
+		// So, basically we are catching two pages, HomePage and ViewPage.
+		ts, err = ts.ParseFiles(page)
+		if err != nil{
+			return nil, err
+		}
+
+		// Add the template set to the map as normal...
 		cache[name] = ts
 	}
 	// return the map
