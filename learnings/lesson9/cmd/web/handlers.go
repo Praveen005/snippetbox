@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
+	// "html/template"
 	"net/http"
 	"strconv"
 
@@ -24,10 +24,35 @@ func (app *application)home(w http.ResponseWriter, r* http.Request){
 		return
 	}
 
-	// Use the new render helper
-	app.render(w, http.StatusOK, "home.tmpl", &templateData{
-		Snippets: snippets,
-	})
+	for _, snippet := range snippets{
+		fmt.Fprintf(w, "%+v\n", snippet)
+	}
+
+	// files := []string{
+	// 	"./ui/html/base.tmpl",
+	// 	"./ui/html/pages/home.tmpl",
+	// 	"./ui/html/partials/nav.tmpl",
+	// }
+
+	// ts, err := template.ParseFiles(files...)
+
+	// if err != nil{
+	// 	// app.errorLog.Print(err.Error())
+	// 	// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	// 	app.serverError(w, err) //serverError() function from helpers.go
+	// 	return
+	// }
+
+	// //It executes a parsed HTML template with provided data(nil here), generating the final output by merging the template's structure with dynamic content.
+	// err = ts.ExecuteTemplate(w, "base", nil)
+	// if err != nil{
+	// 	// app.errorLog.Print(err.Error())
+	// 	// http.Error(w, "Internal Server Error", 500)
+
+	// 	app.serverError(w, err) //serverError() function from helpers.go
+
+	// 	return
+	// }
 } 
 
 func (app *application) snippetView(w http.ResponseWriter, r * http.Request){
@@ -50,35 +75,9 @@ func (app *application) snippetView(w http.ResponseWriter, r * http.Request){
 		}
 		return
 	}
-
+	// Write the snippet data as a plain-text HTTP response body.
+	fmt.Fprintf(w, "%+v", snippet)
 	
-	// Initialize a slice containing the paths to the view.tmpl file,
-	// plus the base layout and navigation partial that we made earlier.
-	files := []string{
-		"./ui/html/base.tmpl",
-		"./ui/html/partials/nav.tmpl",
-		"./ui/html/pages/view.tmpl",
-	}
-
-	// Parse the template files
-	ts, err := template.ParseFiles(files...)
-	if err != nil{
-		app.serverError(w, err)
-		return
-	}
-	// Create an instance of a templateData struct holding the snippet data.
-	data := &templateData{
-		Snippet: snippet,
-	}
-
-
-	// And then execute them. Notice how we are passing in the snippet
-	// data (a models.Snippet struct) as the final parameter?
-	err = ts.ExecuteTemplate(w, "base", data)
-	if err != nil{
-		app.serverError(w, err)
-	}
-
 }
 
 func(app * application) snippetCreate(w http.ResponseWriter, r* http.Request){
@@ -107,4 +106,3 @@ func(app * application) snippetCreate(w http.ResponseWriter, r* http.Request){
 	//Redirect the user to relevent page for the snippet
 	http.Redirect(w, r, fmt.Sprintf("/snippet/view?id=%d", id), http.StatusSeeOther)
 }
-

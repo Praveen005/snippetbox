@@ -1,3 +1,10 @@
+
+
+
+// Contains till: Database Driven Response
+
+
+
 package main
 
 import (
@@ -6,23 +13,25 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"html/template"
+
+
+
 
 	// Import the models package that we just created. You need to prefix this with
 	// whatever module path you set up back in chapter 02.01 (Project Setup and Creating
 	// a Module) so that the import statement looks like this:
-	// "{your-module-path}/internal/models". If you can't remember what module path you
+	// "{your-module-path}/internal/models". If you can't remember what module path you 
 	// used, you can find it at the top of the go.mod file.
 	"github.com/Praveen005/snippetbox/internal/models"
+
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 type application struct{
-	infoLog  		*log.Logger
-	errorLog 		*log.Logger
-	snippets 		*models.SnippetModel
-	templateCache	map[string]*template.Template
+	infoLog  *log.Logger
+	errorLog *log.Logger
+	snippets *models.SnippetModel
 }
 
 func main(){
@@ -49,19 +58,11 @@ func main(){
 	// before the main() function exits
 	defer db.Close()
 
-
-	// Initializa a new template cache
-	templateCache, err  := newTemplateCache()
-	if err != nil{
-		errorLog.Fatal(err)
-	}
-
 	//Initialize a new instance of application struct, containing the dependecies
 	app := &application{
 		errorLog: errorLog,
 		infoLog: infoLog,
 		snippets: &models.SnippetModel{DB: db},
-		templateCache: templateCache,
 	}
 	/*
 		The http.Server type represents an HTTP server. It has fields such as Addr (the address to listen on), Handler (the handler to invoke), and other configuration options like:
