@@ -2,6 +2,8 @@ package main
 
 import(
 	"net/http"
+
+	"github.com/justinas/alice"
 )
 
 // Update the signature for the routes() method so that it returns a
@@ -20,5 +22,16 @@ func(app *application) routes() http.Handler{
 
 
 	// Wrap the existing chain with the logRequest middleware.
-	return app.recoverPanic(app.logRequest(secureHeaders(mux)))
+	// return app.recoverPanic(app.logRequest(secureHeaders(mux)))
+	
+
+	// Using justinas/alice package to chain middleware
+	// return alice.New(app.recoverPanic, app.logRequest, secureHeaders).Then(mux)
+
+	// Create a middleware chain containing our 'standard' middleware
+	// which will be used for every request our application receives.
+	standard := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
+
+	// Return the 'standard' middleware chain followed by the servemux.
+	return standard.Then(mux)
 }
