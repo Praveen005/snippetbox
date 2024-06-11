@@ -12,7 +12,9 @@
             </tr>
             {{range .Snippets}}
                 <tr>
-                    <td><a href="/snippet/view?id={{.ID}}">{{.Title}}</a></td>
+                    <!-- <td><a href="/snippet/view?id={{.ID}}">{{.Title}}</a></td> -->
+                    <!-- Use the new clean URL style-->
+                    <td><a href="/snippet/view/{{.ID}}">{{.Title}}</a></td>
                     <td>{{humanDate .Created}}</td>
                     <!-- Aliter: Pipelining: using the output of one command to another -->
                     <!-- Here, the .Created will give UTC time, which will be used by humanDate function -->

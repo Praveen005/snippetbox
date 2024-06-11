@@ -7,14 +7,20 @@ import (
 	"strconv"
 
 	"github.com/Praveen005/snippetbox/internal/models"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 
 func (app *application)home(w http.ResponseWriter, r* http.Request){
-	if r.URL.Path != "/"{
-		app.notFound(w)
-		return
-	}
+
+	// Because httprouter matches the "/" path exactly, we can now remove the
+	// manual check of r.URL.Path != "/" from this handler.
+
+	// if r.URL.Path != "/"{
+	// 	app.notFound(w)
+	// 	return
+	// }
 
 
 	snippets, err := app.snippets.Latest()
@@ -37,7 +43,21 @@ func (app *application)home(w http.ResponseWriter, r* http.Request){
 
 
 func (app *application) snippetView(w http.ResponseWriter, r * http.Request){
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+
+	// When httprouter is parsing a request, the values of any named parameters
+	// will be stored in the request context. We'll talk about request context
+	// in detail later in the book, but for now it's enough to know that you can
+	// use the ParamsFromContext() function to retrieve a slice containing these
+	// parameter names and values like so:
+	params := httprouter.ParamsFromContext(r.Context())
+
+
+	// id, err := strconv.Atoi(r.URL.Query().Get("id"))
+
+	// We can then use the ByName() method to get the value of the "id" named
+	// parameter from the slice and validate it as normal.
+	id, err := strconv.Atoi(params.ByName("id"))
+
 	if err != nil || id < 1{
 		// http.NotFound(w, r) //sends a 404 response
 		app.notFound(w) //notFound() function from helpers.go
@@ -66,7 +86,16 @@ func (app *application) snippetView(w http.ResponseWriter, r * http.Request){
 
 }
 
-func(app * application) snippetCreate(w http.ResponseWriter, r* http.Request){
+// Add a new snippetCreate handler, which for now returns a placeholder
+// response. We'll update this shortly to show a HTML form.
+func(app *application) snippetCreate(w http.ResponseWriter, r *http.Request){
+	w.Write([]byte("Display the form to create a new snippet..."))
+}
+
+
+
+// Renamed previous snippetCreate() to snippetCreatePost to write to the database
+func(app * application) snippetCreatePost(w http.ResponseWriter, r* http.Request){
 	if r.Method != http.MethodPost{
 		w.Header().Set("Allow", http.MethodPost)
 		// http.Error(w, "Method not Allowed", 405)
@@ -90,5 +119,9 @@ func(app * application) snippetCreate(w http.ResponseWriter, r* http.Request){
 	}
 	
 	//Redirect the user to relevent page for the snippet
-	http.Redirect(w, r, fmt.Sprintf("/snippet/view?id=%d", id), http.StatusSeeOther)
+	// http.Redirect(w, r, fmt.Sprintf("/snippet/view?id=%d", id), http.StatusSeeOther)
+
+	// Update the redirect path to use the new clean URL format.
+	http.Redirect(w, r, fmt.Sprintf("/snippet/view/%d", id), http.StatusSeeOther)
+
 }
