@@ -51,7 +51,7 @@ func (app *application) render(w http.ResponseWriter, status int, page string, d
 	// Write the template to the buffer, instead of straight to the
 	// http.ResponseWriter. If there's an error, call our serverError() helper
 	// and then return.
-	// All the templates are ultimatel being invoked from the based template only, 
+	// All the templates are ultimately being invoked from the based template only, 
 	// hence the name below is "base"
 	err := ts.ExecuteTemplate(buf, "base", data)
 	if err != nil{
