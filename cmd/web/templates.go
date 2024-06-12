@@ -8,14 +8,15 @@ import (
 	"github.com/Praveen005/snippetbox/internal/models"
 )
 
-// Define a templateData type to act as the holding structure for
-// any dynamic data that we want to pass to our HTML templates.
-// At the moment it only contains one field, but we'll add more
-// to it as the build progresses.
+// Add a Form field with the type "any".
+// We’ll use this Form field to pass the validation errors and previously submitted data back to
+// the template when we re-display the form.
+
 type templateData struct{
 	CurrentYear 	int
 	Snippet     	*models.Snippet
 	Snippets   		[]*models.Snippet
+	Form			any
 }
 
 
