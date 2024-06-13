@@ -43,6 +43,7 @@ func (app *application) recoverPanic(next http.Handler) http.Handler{
 				app.serverError(w, fmt.Errorf("%s", err))
 			}
 		}()
-			next.ServeHTTP(w, r)
+
+		next.ServeHTTP(w, r)
 	})
 }

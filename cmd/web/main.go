@@ -3,10 +3,11 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
-	"html/template"
+	"time"
 
 	// Import the models package that we just created. You need to prefix this with
 	// whatever module path you set up back in chapter 02.01 (Project Setup and Creating
@@ -15,14 +16,20 @@ import (
 	// used, you can find it at the top of the go.mod file.
 	"github.com/Praveen005/snippetbox/internal/models"
 
+	"github.com/alexedwards/scs/mysqlstore"
+	"github.com/alexedwards/scs/v2"
+	"github.com/go-playground/form/v4"
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// Add a new sessionManager field to the application struct.
 type application struct{
 	infoLog  		*log.Logger
 	errorLog 		*log.Logger
 	snippets 		*models.SnippetModel
 	templateCache	map[string]*template.Template
+	formDecoder 	*form.Decoder
+	sessionManager  *scs.SessionManager
 }
 
 func main(){
@@ -56,12 +63,28 @@ func main(){
 		errorLog.Fatal(err)
 	}
 
-	//Initialize a new instance of application struct, containing the dependecies
+
+	// Initialize a decoder instance
+	formDecoder := form.NewDecoder()
+
+
+	// Use the scs.New() function to initialize a new session manager. Then we
+	// configure it to use our MySQL database as the session store, and set a
+	// lifetime of 12 hours (so that sessions automatically expire 12 hours
+	// after first being created).
+	sessionManager := scs.New()
+	sessionManager.Store = mysqlstore.New(db)
+	sessionManager.Lifetime = 12 * time.Hour
+
+
+	// And add the session manager to our application dependencies.
 	app := &application{
 		errorLog: errorLog,
 		infoLog: infoLog,
 		snippets: &models.SnippetModel{DB: db},
 		templateCache: templateCache,
+		formDecoder: formDecoder,
+		sessionManager: sessionManager,
 	}
 	/*
 		The http.Server type represents an HTTP server. It has fields such as Addr (the address to listen on), Handler (the handler to invoke), and other configuration options like:
