@@ -19,3 +19,15 @@
 
 # Go workspace file
 go.work
+
+
+# Ignore TLS certificate and key files
+cert.pem
+key.pem
+
+# If the cert and key files are in a specific directory, specify the path
+tls/cert.pem
+tls/key.pem
+
+# Ignore all .pem files in the project (if applicable and safe)
+*.pem

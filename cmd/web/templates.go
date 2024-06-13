@@ -17,6 +17,7 @@ type templateData struct{
 	Snippet     	*models.Snippet
 	Snippets   		[]*models.Snippet
 	Form			any
+	Flash 			string // Add a Flash field to the templateData struct.
 }
 
 
