@@ -47,3 +47,30 @@ func (app *application) recoverPanic(next http.Handler) http.Handler{
 		next.ServeHTTP(w, r)
 	})
 }
+
+func(app *application) requireAuthentication(next http.Handler) http.Handler{
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		// If the user is not authenticated, redirect them to the login page and
+		// return from the middleware chain so that no subsequent handlers in
+		// the chain are executed.
+		// Isn't it? why would you want an unAuthenticated request to go down the chain? You won't
+		if !app.isAuthenticated(r){
+			http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+			return
+		}
+		// Otherwise set the "Cache-Control: no-store" header so that pages
+		// require authentication are not stored in the users browser cache (or
+		// other intermediary cache).
+		// Its effect is specific to the response of the /snippet/create page.
+		// It does not affect the caching behavior of other pages within your application.
+		// its effect is tied to the specific request/response cycle 
+		// initiated when the user accesses and interacts with the /snippet/create page.
+		w.Header().Add("Cache-Control", "no-store")
+
+
+		// And call the next handler in the chain
+		next.ServeHTTP(w, r)
+
+	})
+}
