@@ -28,6 +28,7 @@ type application struct{
 	infoLog  		*log.Logger
 	errorLog 		*log.Logger
 	snippets 		*models.SnippetModel
+	users 			*models.UserModel
 	templateCache	map[string]*template.Template
 	formDecoder 	*form.Decoder
 	sessionManager  *scs.SessionManager
@@ -85,11 +86,13 @@ func main(){
 	sessionManager.Cookie.Secure = true
 
 
-	// And add the session manager to our application dependencies.
+	// Initialize a models.UserModel instance and add it to the application
+	// dependencies.
 	app := &application{
 		errorLog: errorLog,
 		infoLog: infoLog,
 		snippets: &models.SnippetModel{DB: db},
+		users: &models.UserModel{DB: db},
 		templateCache: templateCache,
 		formDecoder: formDecoder,
 		sessionManager: sessionManager,
