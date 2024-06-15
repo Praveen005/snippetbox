@@ -38,7 +38,8 @@ func(app *application) routes() http.Handler{
 	// dynamic application routes. For now, this chain will only contain the
 	// LoadAndSave session middleware but we'll add more to it later.
 	// Unprotected application routes using the "dynamic" middleware chain. // pg. 300
-	dynamic := alice.New(app.sessionManager.LoadAndSave)
+	dynamic := alice.New(app.sessionManager.LoadAndSave, noSurf)	
+	// dynamic := alice.New(app.sessionManager.LoadAndSave)	
 
 
 	router.Handler(http.MethodGet, "/", dynamic.ThenFunc(app.home))
@@ -55,6 +56,8 @@ func(app *application) routes() http.Handler{
 	// Means you can simply type in https://localhost:4000/snippet/create and create a snippet, 
 	// Only authenticted users should be able to do that.
 	// Notice, it's dynamic.Append below, we are inserting requireAuthentication middleware in between.
+	// Because the 'protected' middleware chain appends to the 'dynamic' chain
+	// the noSurf middleware will also be used on the three routes below too.
 	protected := dynamic.Append(app.requireAuthentication)
 
 	router.Handler(http.MethodGet, "/snippet/create", protected.ThenFunc(app.snippetCreate))

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/go-playground/form/v4"
+	"github.com/justinas/nosurf"
 )
 
 //The serverError helper writes an error and stack trace to the error log,
@@ -83,6 +84,7 @@ func(app *application) newTemplateData(r *http.Request) *templateData{
 
 		// Add the authentication status to the template data.
 		IsAuthenticated: app.isAuthenticated(r),
+		CSRFToken: nosurf.Token(r),  // Add the CSRF token.
 	}
 }
 

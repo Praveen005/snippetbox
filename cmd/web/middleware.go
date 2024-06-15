@@ -3,6 +3,10 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+
+	"github.com/justinas/nosurf"
+
 )
 
 func secureHeaders(next http.Handler) http.Handler{
@@ -73,4 +77,23 @@ func(app *application) requireAuthentication(next http.Handler) http.Handler{
 		next.ServeHTTP(w, r)
 
 	})
+}
+
+
+
+// Create a NoSurf middleware function which uses a customized CSRF cookie with
+// the Secure, Path and HttpOnly attributes set.
+// Notice, the next handler is being wrapped inside noSurf middleware ensuring the application of CSRF 
+// safeguards on all the requests that proceeds via this. 
+// Remember we only need to apply on unsafe methods(non-GET/HEAD/OPTIONS/TRACE)
+// Point to remember:  If per-session token implementations occur after the initial generation of a token, 
+// the value is stored in the session(keep in mind this is why while chaining the middleware, we need the session manager middleware before the csrf one, your doubt stand cleared :p) and is used for each subsequent request until the session expires. : [ref](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern): 
+func noSurf(next http.Handler) http.Handler{
+	csrfHandler := nosurf.New(next)
+	csrfHandler.SetBaseCookie(http.Cookie{
+		HttpOnly: true,
+		Path: "/",
+		Secure: true,
+	})
+	return csrfHandler
 }
