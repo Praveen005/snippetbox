@@ -17,7 +17,7 @@ var EmailRx = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9
 
 
 // Add a new NonFieldErrors []string field to the struct, which we will use to 
-// hold any validation errors which are not related to a specific form field.
+// hold any validation errors which are not related to a specific form field(Like "email or password is incorrect")
 type Validator struct {
 	NonFieldErrors    []string
 	FieldErrors       map[string]string
