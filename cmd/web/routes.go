@@ -38,7 +38,8 @@ func(app *application) routes() http.Handler{
 	// dynamic application routes. For now, this chain will only contain the
 	// LoadAndSave session middleware but we'll add more to it later.
 	// Unprotected application routes using the "dynamic" middleware chain. // pg. 300
-	dynamic := alice.New(app.sessionManager.LoadAndSave, noSurf)	
+	// Add the authenticate() middleware to the chain.
+	dynamic := alice.New(app.sessionManager.LoadAndSave, noSurf, app.authenticate)	
 	// dynamic := alice.New(app.sessionManager.LoadAndSave)	
 
 
