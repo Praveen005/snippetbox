@@ -27,10 +27,16 @@ func(app *application) routes() http.Handler{
 
 
 
-	// Leave the static files route unchanged. We don't need the session middleware to act on this route
-	// Because all it does is serve static files.
-	fileserver := http.FileServer(http.Dir("./ui/static/"))
-	router.Handler(http.MethodGet, "/static/*filepath", http.StripPrefix("/static", fileserver))
+	// // Leave the static files route unchanged. We don't need the session middleware to act on this route
+	// // Because all it does is serve static files.
+	// fileserver := http.FileServer(http.Dir("./ui/static/"))
+	// router.Handler(http.MethodGet, "/static/*filepath", http.StripPrefix("/static", fileserver))
+
+	// Take the ui.Files embedded filesystem and convert it to a http.FS type so
+	// that it satisfies the http.FileSystem interface. We then pass that to the
+	// http.FileServer() function to create the file server handler.
+	fileServer := http.FileServer(http.FS(ui.Files))
+
 
 
 
